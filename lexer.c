@@ -97,7 +97,7 @@ int isNUM(FILE *tape) {
       
       if ((j == i || (!isspace(lexeme[i]) && lexeme[i] != '\n')) &&
           lexeme[i] != '+' && lexeme[i] != '-' && lexeme[i] != '*' &&
-          lexeme[i] != '/') {
+          lexeme[i] != '/' && lexeme[i] != ')') {
         ungetc(lexeme[i], tape);
         lexeme[i] = 0;
         return 0;

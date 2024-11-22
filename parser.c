@@ -100,7 +100,6 @@ void E(void) {
 
   char varname[MAXIDLEN + 1];
 _T:
-
 _F:
   switch (lookahead) {
   case '(':
@@ -128,8 +127,6 @@ _F:
       acc = recall(varname);
     }
   }
-
-  printf("\tValor acc: %lf\n", acc);
 
   if (signal) {
     /*4*/ printf("\tneg acc\n"); /*4*/
