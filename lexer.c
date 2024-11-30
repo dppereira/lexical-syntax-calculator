@@ -43,6 +43,60 @@ int isID(FILE *tape) {
   return 0;
 }
 
+// OCT = 0[0-7]+
+// 01 02 03 04 011
+int isOCT(FILE *tape){
+	int i = 0;
+	lexeme[i] = getc(tape);
+
+	if (lexeme[i] == '0'){
+		i++;
+		while (isdigit(lexeme[i] = getc(tape))){
+			if (lexeme[i] < '0' || lexeme[i] > '7'){
+				ungetc(lexeme[i], tape);
+				lexeme[i] = 0;
+				return 0;
+			}
+			i++;
+		};
+
+		ungetc(lexeme[i], tape);
+		lexeme[i] = 0;
+		return OCT;
+	}
+
+	ungetc(lexeme[i], tape);
+	lexeme[i] = 0;
+	return 0;
+}
+
+// HEX = 0[xX][0-9a-fA-F]+
+// 0X1 0X2 0x3 0x4 0x11
+int isHEX(FILE *tape){
+	int i = 0;
+ 	lexeme[i] = getc(tape);
+
+ 	if (lexeme[i] == '0') {
+		i++;
+ 		if (!isspace(lexeme[i] = getc(tape))){
+ 			if (lexeme[i] == 'x' || lexeme[i] == 'X'){
+				i++;
+ 				while(isxdigit(lexeme[i] = getc(tape))) i++;
+
+				ungetc(lexeme[i], tape);
+				lexeme[i] = 0;
+				return HEX;
+ 			}
+			ungetc(lexeme[i], tape);
+ 		}
+		i--;
+ 	}
+
+ 	ungetc(lexeme[i], tape);
+	lexeme[i] = 0;
+ 	return 0;
+}
+
 int isNUM(FILE *tape) {
   int i = 0, j = 0;
   lexeme[i] = getc(tape);
@@ -85,7 +139,6 @@ int isNUM(FILE *tape) {
       // Verifica sinal
       if (lexeme[i] == '+' || lexeme[i] == '-') {
         i++;
-        lexeme[i] = getc(tape);
       } else {
         ungetc(lexeme[i], tape);
       }
@@ -94,7 +147,7 @@ int isNUM(FILE *tape) {
       while (isdigit(lexeme[i] = getc(tape))) {
         i++;
       }
-      
+
       if ((j == i || (!isspace(lexeme[i]) && lexeme[i] != '\n')) &&
           lexeme[i] != '+' && lexeme[i] != '-' && lexeme[i] != '*' &&
           lexeme[i] != '/' && lexeme[i] != ')') {
@@ -141,6 +194,10 @@ int gettoken(FILE *source) {
     return token;
   if ((token = isID(source)))
     return token;
+  if ((token = isOCT(source)))
+    return 0;
+  if ((token = isHEX(source)))
+    return 0;
   if ((token = isNUM(source)))
     return token;
 
