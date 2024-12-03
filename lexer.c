@@ -106,7 +106,7 @@ int isHEX(FILE *tape){
 	int i = 0;
  	lexeme[i] = getc(tape);
 
-  // Verifica se começa com '0'
+  // Verifica se comeca com '0'
  	if (lexeme[i] == '0') {
 		i++;
  		if (!isspace(lexeme[i] = getc(tape))){
