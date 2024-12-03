@@ -1,12 +1,14 @@
 #include <ctype.h>
 #include <lexer.h>
 #include <stdio.h>
+#include <string.h>
 
 double lexval;
 int linenum = 1;
 char lexeme[MAXIDLEN + 1];
 
 // ASGN = [:=]
+// Ex: var := 4
 int isASGN(FILE *tape) {
   lexeme[0] = getc(tape);
   if (lexeme[0] == ':') {
@@ -35,6 +37,17 @@ int isID(FILE *tape) {
 
     ungetc(lexeme[i], tape);
     lexeme[i] = 0;
+
+    char lowlex[sizeof(lexeme)];
+    for (int j = 0; lexeme[j] != '\0'; j++) {
+      lowlex[j] = tolower(lexeme[j]);
+      lowlex[j + 1] = '\0';
+    }
+
+    if (strcmp(lowlex, "quit") == 0)
+      return QUIT;
+    else if (strcmp(lowlex, "exit") == 0)
+      return EXIT;
     return ID;
   }
 
@@ -44,7 +57,7 @@ int isID(FILE *tape) {
 }
 
 // OCT = 0[0-7]+
-// 01 02 03 04 011
+// Ex: 01 02 03 04 011
 int isOCT(FILE *tape){
 	int i = 0;
 	lexeme[i] = getc(tape);
@@ -71,7 +84,7 @@ int isOCT(FILE *tape){
 }
 
 // HEX = 0[xX][0-9a-fA-F]+
-// 0X1 0X2 0x3 0x4 0x11
+// Ex: 0X1 0X2 0x3 0x4 0x11
 int isHEX(FILE *tape){
 	int i = 0;
  	lexeme[i] = getc(tape);
@@ -97,6 +110,7 @@ int isHEX(FILE *tape){
  	return 0;
 }
 
+// 
 int isNUM(FILE *tape) {
   int i = 0, j = 0;
   lexeme[i] = getc(tape);
